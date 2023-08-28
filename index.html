@@ -1,0 +1,281 @@
+
+<html>
+  <head>
+    <title> Siddhi's Quizzing Game</title>
+    <style>
+      body {
+        background-image: url("hand-drawn-colorful-science-education-background_23-2148490027.avif");
+        background-size: cover;
+        background-position: center;
+        text-align: center;
+        padding-top: 100px;
+        font-family:cursive;
+        color: white;
+        align-items:center
+      }
+  
+      .quiz-container {
+        background-color: rgb(255, 0, 128);
+        width: 600px;
+        height: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        text-align: center;
+      }
+  
+      h1 {
+        font-size: 40px;
+        background-image: linear-gradient(to right, red,orange,green,blue,indigo,violet);
+      }
+  
+      #question {
+        font-size: 30px;
+        margin-bottom: 20px;
+        font-style:italic;
+      }
+  
+      #options {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size:50px; 
+    
+       
+      }
+  
+      .option {
+        margin-bottom: 20px;
+        width: 120px;
+        height: 50px;
+        font-size: 20px;
+        
+        
+      }
+  
+      #submitBtn,
+      #nextBtn {
+        padding: 10px 20px;
+        font-size: 18px;
+        background-color: #12ecec;
+        color: white;
+        border: none;
+        cursor: pointer;
+        margin-top: 20px;
+        width:200px;
+        height: 100px;
+        font-style:initial;
+        font-size: 30px;
+        align-self: center;
+      }
+  
+      #nextBtn {
+        display: none;
+        margin: 0 auto;
+        align-self: center;
+      }
+  
+      .feedback {
+        margin-top: 20px;
+        font-weight: bold;
+        background-color: rgb(23, 23, 21);
+        
+      }
+  
+      .correct {
+        background-color: #4CAF50;
+      }
+  
+      .incorrect {
+        background-color: #F44336;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="quiz-container">
+      <h1> Siddhi's Quizzing Game</h1>
+      <div id="question"></div>
+      <div id="options"></div>
+      <button id="submitBtn">Submit</button>
+      <button id="nextBtn">Next</button>
+      <div id="feedback" class="feedback"></div>
+    </div>
+  
+    <script>
+      var questions = [
+        {
+          question: "What is the chemical symbol for Magnesium Sulphate?",
+          options: ["MgSO3", "MgcO4", "MgSO4", "MgPo4"],
+          answer: 2
+        },
+        {
+          question: "Who wrote the famous 1855 poem 'The Charge of the Light Brigade'?",
+          options: [" Lord Alfred Tennyson", " Christopher Marlowe", "Johannes Gutenberg", "René Descartes"],
+          answer: 0
+        },
+        {
+          question: "How many sonnets were written by William Shakespeare?",
+          options: ["194", " 206", "154", "168"],
+          answer: 3
+        },
+        {
+          question: "How many players are there in one Baseball team??",
+          options: ["8", "9", "10", "11"],
+          answer: 1
+        },
+        {
+          question: "Which Mughal ruler is associated with Bibi ka Maqbara?",
+          options: ["Shah Jahan", "Akbar", "Humayun", "Aurangzeb"],
+          answer: 3
+        },
+        {
+          question: "Where was freedom fighter Udham Singh born?",
+          options: ["Amritsar", "Hyderabad", "Sangrur", "Patiala"],
+          answer: 2
+        },
+        {
+          question: "Who is known as the Father of Mathematics?",
+          options: ["Pythagoras", "Moses", "Archimedes", "Euclid"],
+          answer: 2
+        },
+        {
+          question: "Which state in India has its own constitution?",
+          options: ["Ladakh", "Nagaland", "Sikkim", "Jammu and Kasmir"],
+          answer: 3
+        },
+        {
+          question: "Which planet is known as the earth's twin?",
+          options: ["Mars", "Venus", "Jupiter", "Mercury"],
+          answer: 1
+        },
+        {
+          question: "What is the largest organ in the human body?",
+          options: ["Liver", "Heart", "Skin", "Lungs"],
+          answer: 2
+        },
+        {
+          question: "How many players are there in one Baseball team?",
+          options: ["8", "9", "10", "11"],
+          answer: 1
+        },
+        {
+          question: 'Who founded the search engine "Google"?',
+          options: ["Bill Gates", "Larry Page", "Mark Zuckerberg", "Jeff Bezos"],
+          answer: 1
+        },
+        {
+          question: "How many sides does the Pentagon have?",
+          options: ["4", "5", "6", "7"],
+          answer: 1
+        },
+        {
+          question: "What does 4G mean?",
+          options: ["Fourth Generation", "Four GigaBytes", "Four Gorillas", "Fourth Galaxy"],
+          answer: 0
+        },
+        {
+          question: "When was the camera invented?",
+          options: ["1807", "1839", "1876", "1901"],
+          answer: 1
+        },
+        {
+          question: "What is the height of Kanchenjunga?",
+          options: ["8,586 meters", "8,848 meters", "8,163 meters", "8,091 meters"],
+          answer: 0
+        },
+        {
+          question: "What is the origin of the Tapi river?",
+          options: ["Himalayas", "Western Ghats", "Eastern Ghats", "Aravalli Range"],
+          answer: 1
+        }
+      ];
+  
+      var currentQuestion = 0;
+      var score = 0;
+  
+      var questionElement = document.getElementById("question");
+      var optionsElement = document.getElementById("options");
+      var submitBtn = document.getElementById("submitBtn");
+      var nextBtn = document.getElementById("nextBtn");
+      var feedbackElement = document.getElementById("feedback");
+  
+      function displayQuestion() {
+        var question = questions[currentQuestion];
+        questionElement.textContent = question.question;
+        optionsElement.innerHTML = "";
+  
+        for (var i = 0; i < question.options.length; i++) {
+          var option = document.createElement("button");
+          option.className = "option";
+          option.textContent = question.options[i];
+          option.value = i;
+          option.onclick = checkAnswer;
+          optionsElement.appendChild(option);
+        }
+      }
+  
+      function checkAnswer() {
+        var selectedOption = parseInt(this.value);
+  
+        if (selectedOption === questions[currentQuestion].answer) {
+          score++;
+          this.classList.add("correct");
+        } else {
+          this.classList.add("incorrect");
+          var correctOption = optionsElement.children[questions[currentQuestion].answer];
+          correctOption.classList.add("correct");
+        }
+  
+        submitBtn.style.display = "none";
+        nextBtn.style.display = "block";
+      }
+  
+      function showFeedback() {
+        var question = questions[currentQuestion];
+        var selectedOption = optionsElement.querySelector(".option.correct");
+        var feedbackText = "Correct answer!";
+  
+        if (selectedOption) {
+          if (parseInt(selectedOption.value) === question.answer) {
+            feedbackText = "Correct!";
+          } else {
+            feedbackText = "Incorrect!";
+          }
+        } else {
+          feedbackText = "No answer selected!";
+        }
+  
+        feedbackElement.textContent = feedbackText;
+        feedbackElement.classList.add(selectedOption ? "correct" : "incorrect");
+        feedbackElement.style.display = "block";
+      }
+  
+      function nextQuestion() {
+        currentQuestion++;
+  
+        if (currentQuestion === questions.length - 1) {
+          optionsElement.innerHTML = "Quiz completed! Your score is: " + score + "/" + questions.length;
+          submitBtn.style.display = "none";
+          nextBtn.style.display = "none";
+          feedbackElement.style.display = "none";
+        } else {
+          displayQuestion();
+          submitBtn.style.display = "block";
+          nextBtn.style.display = "none";
+          feedbackElement.textContent = "";
+          feedbackElement.style.display = "none";
+        }
+      }
+  
+      submitBtn.onclick = function() {
+        showFeedback();
+        submitBtn.style.display = "none";
+        nextBtn.style.display = "block";
+      };
+      nextBtn.onclick = nextQuestion;
+  
+      displayQuestion();
+    </script>
+  </body>
+  </html>
